@@ -152,8 +152,8 @@ const AccordionInfo = ({ data }) => {
                                             <span>{COMPLIANCE_MISCONFIGS[key]}</span>
                                         {
                                             (present > -1) ?
-                                            <CheckCircleIcon sx={{ color: green[500] }}/> :
-                                            <HighlightOffIcon sx={{ alignSelf: 'right', color: red[500] }}/>                         
+                                            <CheckCircleIcon sx={{ color: green[500], marginLeft: "auto" }}/> :
+                                            <HighlightOffIcon sx={{ alignSelf: 'right', color: red[500], marginLeft: "auto" }}/>                         
                                         }
                                         </div>
                                     </Tooltip>
@@ -182,14 +182,14 @@ const AccordionInfo = ({ data }) => {
                                 key={`mis${index}`}
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
-                                <TableCell component="th" scope="row" sx={{display: 'flex'}}>
+                                <TableCell component="th" scope="row">
                                     <Tooltip title={COMPLIANCE_VIOLATIONS_SUGGESTIONS[key].replace("#META", meta)} placement="bottom-start">
                                     <div style={{display: 'flex'}}>
                                         {COMPLIANCE_VIOLATIONS[key]}
                                         {
                                             (present > -1) ?
-                                            <CheckCircleIcon sx={{ color: green[500] }}/> :
-                                            <HighlightOffIcon sx={{ color: red[500] }}/>                         
+                                            <CheckCircleIcon sx={{ color: green[500], marginLeft: "auto" }}/> :
+                                            <HighlightOffIcon sx={{ color: red[500], marginLeft: "auto" }}/>                         
                                         }
                                     </div>
                                     </Tooltip>
