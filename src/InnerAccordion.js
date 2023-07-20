@@ -163,8 +163,8 @@ const AccordionInfo = ({ data }) => {
                                         {COMPLIANCE_VIOLATIONS[key]}
                                         {
                                             (present > -1) ?
-                                            <HighlightOffIcon sx={{ color: red[500], marginLeft: "auto" }}/> :
-                                            <CheckCircleIcon sx={{ color: green[500], marginLeft: "auto" }}/>
+                                            <CheckCircleIcon sx={{ color: green[500], marginLeft: "auto" }}/> :
+                                            <HighlightOffIcon sx={{ alignSelf: 'right', color: red[500], marginLeft: "auto" }}/>                         
                                         }
                                     </div>
                                     </LightTooltip>
