@@ -16,7 +16,7 @@ import TableHead from '@mui/material/TableHead';
 import { green, red } from '@mui/material/colors';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import Tooltip from '@mui/material/Tooltip';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
 const COMPLIANCE_VIOLATIONS = {
     1: "UserId Module violations.", //UserId module [module names], called when specific vendor consent was denied. Please check your CMP settings or reach out to your CMP vendor. Vendor consent data sent by CMP - [add vendor consent data here]
@@ -61,6 +61,17 @@ const COMPLIANCE_MISCONFIGS_SUGGESTIONS = {
     6: "Prebid version used is an older one. Upgrading to the latest version will most likely resolve all compliance related issues.",
     7: "Both GDPR and CCPA are enabled in a single profile. We recommend that you create separate profiles for each GDPR and CCPA applicable regions."
 }
+
+const LightTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      backgroundColor: theme.palette.common.black,
+      color: 'rgba(255, 255, 255, 0.87)',
+      boxShadow: theme.shadows[1],
+      fontSize: 15,
+    },
+}));
 
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -128,12 +139,12 @@ const AccordionInfo = ({ data }) => {
         </div>
         <Divider />
         <div style={{display: "flex", marginTop: '10px'}}>
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{ marginRight: '10px' }}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead sx={{ background: '#fddada'}}>
+                    <TableHead sx={{ background: '#4fc8ed'}}>
                         <TableRow>
                             <TableCell
-                                sx={{ fontWeight: 'bold' }}
+                                sx={{ fontWeight: 'bold', fontSize: 'large', color: 'white' }}
                             >Violations</TableCell>
                         </TableRow>
                     </TableHead>
@@ -147,7 +158,7 @@ const AccordionInfo = ({ data }) => {
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row">
-                                    <Tooltip title={COMPLIANCE_VIOLATIONS_SUGGESTIONS[key].replace("#META", meta)} placement="bottom-start">
+                                    <LightTooltip title={COMPLIANCE_VIOLATIONS_SUGGESTIONS[key].replace("#META", meta)} placement="bottom-start">
                                     <div style={{display: 'flex'}}>
                                         {COMPLIANCE_VIOLATIONS[key]}
                                         {
@@ -156,7 +167,7 @@ const AccordionInfo = ({ data }) => {
                                             <CheckCircleIcon sx={{ color: green[500], marginLeft: "auto" }}/>
                                         }
                                     </div>
-                                    </Tooltip>
+                                    </LightTooltip>
                                 </TableCell>
                             </TableRow>)
                         }
@@ -164,13 +175,12 @@ const AccordionInfo = ({ data }) => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <TableContainer component={Paper}
-                sx={{ marginRight: '10px' }}>
+            <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead sx={{ background: '#fddada'}}>
+                    <TableHead sx={{ background: '#4fc8ed'}}>
                         <TableRow>
                             <TableCell
-                                sx={{ fontWeight: 'bold' }}
+                                sx={{ fontWeight: 'bold', fontSize: 'large', color: 'white' }}
                             >Misconfigurations</TableCell>
                         </TableRow>
                     </TableHead>
@@ -183,7 +193,7 @@ const AccordionInfo = ({ data }) => {
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 <TableCell component="th" scope="row">
-                                    <Tooltip title={COMPLIANCE_MISCONFIGS_SUGGESTIONS[key].replace("#META", meta)} placement="bottom-start">
+                                    <LightTooltip title={COMPLIANCE_MISCONFIGS_SUGGESTIONS[key].replace("#META", meta)} placement="bottom-start">
                                         <div style={{display: 'flex'}}>
                                             <span>{COMPLIANCE_MISCONFIGS[key]}</span>
                                         {
@@ -192,7 +202,7 @@ const AccordionInfo = ({ data }) => {
                                              <CheckCircleIcon sx={{ color: green[500], marginLeft: "auto" }}/>
                                         }
                                         </div>
-                                    </Tooltip>
+                                    </LightTooltip>
                                 </TableCell>
                             </TableRow>)
                         }
@@ -208,7 +218,7 @@ const AccordionInfo = ({ data }) => {
 const InnerAccordion = ({ data }) => {
   return data.map((row, index) => {
     return (
-        <Accordion key={'inner-' + index}  style={{marginBottom: "10px"}}>
+        <Accordion key={'inner-' + index}  style={{marginBottom: "0px"}}>
             <MuiAccordionSummary
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"

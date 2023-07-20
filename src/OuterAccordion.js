@@ -8,6 +8,17 @@ import { styled } from '@mui/material/styles';
 import InnerAccordion from './InnerAccordion';
 import LanguageIcon from '@mui/icons-material/Language';
 import { grey } from '@mui/material/colors';
+import Badge from '@mui/material/Badge';
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    right: -15,
+    top: 10,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: '2px 6px',
+    background: '#F24C3D'
+  },
+}));
 
 const Summary = ({info}) => {
   return (
@@ -16,7 +27,9 @@ const Summary = ({info}) => {
         <LanguageIcon sx={{color: grey[700] }}/>
       </div>
       <div style={{display: 'inline', alignSelf: 'center', marginLeft: '10px'}}>
-        {info.domain}
+        <StyledBadge badgeContent={info.data.length} color="primary">
+          <span style={{color: "#2192b5", fontWeight: "700"}}>{info.domain}</span>
+        </StyledBadge>
       </div>
     </div>
   );
@@ -29,7 +42,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 const OuterAccordion = ({ domain, data, health }) => {
   return (
-      <Accordion style={{marginBottom: "10px"}}>
+      <Accordion style={{marginBottom: "0px"}}>
         <MuiAccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
