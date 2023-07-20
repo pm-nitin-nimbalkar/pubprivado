@@ -29,7 +29,7 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 const OuterAccordion = ({ domain, data, health }) => {
   return (
-      <Accordion style={{marginBottom: "30px"}}>
+      <Accordion style={{marginBottom: "10px"}}>
         <MuiAccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"

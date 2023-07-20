@@ -64,7 +64,7 @@ const COMPLIANCE_MISCONFIGS_SUGGESTIONS = {
 
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   padding: theme.spacing(2),
-  borderTop: '1px solid rgba(0, 0, 0, .750)',
+  borderTop: '1px solid rgba(0, 0, 0)',
 }));
 
 const AccordionInfo = ({ data }) => {
@@ -110,7 +110,7 @@ const AccordionInfo = ({ data }) => {
                 </span>
                 <span className='cell'>
                     <span className="key">USP API: </span>
-                    <span className='value'>{data.cApi}</span>
+                    <span className='value'>{data.cApi || 'iab'}</span>
                 </span>
             </div>
             <div className='inforow'>
@@ -120,7 +120,7 @@ const AccordionInfo = ({ data }) => {
                 </span>
                 <span className='cell'>
                     <span className="key">CMP API: </span>
-                    <span className='value'>{data.gApi}</span>
+                    <span className='value'>{data.gApi || 'iab'}</span>
                 </span>
                 <span className='cell'>
                 </span>
@@ -128,43 +128,7 @@ const AccordionInfo = ({ data }) => {
         </div>
         <Divider />
         <div style={{display: "flex", marginTop: '10px'}}>
-            <TableContainer component={Paper}
-                sx={{ marginRight: '10px' }}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                    <TableHead sx={{ background: '#fddada'}}>
-                        <TableRow>
-                            <TableCell
-                                sx={{ fontWeight: 'bold' }}
-                            >Misconfigurations</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {Object.keys(COMPLIANCE_MISCONFIGS).map((key, index) => {
-                            let present = data.errors.misconfigs.findIndex(item => item.errorCode == key);
-                            let meta = present > -1 ? data.errors.misconfigs[present].meta : '';
-                            return (<TableRow
-                                key={`mis${index}`}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    <Tooltip title={COMPLIANCE_MISCONFIGS_SUGGESTIONS[key].replace("#META", meta)} placement="bottom-start">
-                                        <div style={{display: 'flex'}}>
-                                            <span>{COMPLIANCE_MISCONFIGS[key]}</span>
-                                        {
-                                            (present > -1) ?
-                                            <CheckCircleIcon sx={{ color: green[500], marginLeft: "auto" }}/> :
-                                            <HighlightOffIcon sx={{ alignSelf: 'right', color: red[500], marginLeft: "auto" }}/>                         
-                                        }
-                                        </div>
-                                    </Tooltip>
-                                </TableCell>
-                            </TableRow>)
-                        }
-                        )}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <TableContainer component={Paper}>
+        <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead sx={{ background: '#fddada'}}>
                         <TableRow>
@@ -189,9 +153,45 @@ const AccordionInfo = ({ data }) => {
                                         {
                                             (present > -1) ?
                                             <CheckCircleIcon sx={{ color: green[500], marginLeft: "auto" }}/> :
-                                            <HighlightOffIcon sx={{ color: red[500], marginLeft: "auto" }}/>                         
+                                            <HighlightOffIcon sx={{ alignSelf: 'right', color: red[500], marginLeft: "auto" }}/>                         
                                         }
                                     </div>
+                                    </Tooltip>
+                                </TableCell>
+                            </TableRow>)
+                        }
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <TableContainer component={Paper}
+                sx={{ marginRight: '10px' }}>
+                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <TableHead sx={{ background: '#fddada'}}>
+                        <TableRow>
+                            <TableCell
+                                sx={{ fontWeight: 'bold' }}
+                            >Misconfigurations</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {Object.keys(COMPLIANCE_MISCONFIGS).map((key, index) => {
+                            let present = data.errors.misconfigs.findIndex(item => item.errorCode == key);
+                            let meta = present > -1 ? data.errors.misconfigs[present].meta : '';
+                            return (<TableRow
+                                key={`mis${index}`}
+                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            >
+                                <TableCell component="th" scope="row">
+                                    <Tooltip title={COMPLIANCE_MISCONFIGS_SUGGESTIONS[key].replace("#META", meta)} placement="bottom-start">
+                                        <div style={{display: 'flex'}}>
+                                            <span>{COMPLIANCE_MISCONFIGS[key]}</span>
+                                        {
+                                            (present > -1) ?
+                                            <HighlightOffIcon sx={{ alignSelf: 'right', color: red[500], marginLeft: "auto" }}/>:
+                                             <CheckCircleIcon sx={{ color: green[500], marginLeft: "auto" }}/>
+                                        }
+                                        </div>
                                     </Tooltip>
                                 </TableCell>
                             </TableRow>)
@@ -214,7 +214,7 @@ const InnerAccordion = ({ data }) => {
                 aria-controls="panel1a-content"
                 id="panel1a-header"
             >
-                <Typography sx={{fontWeight: 'bold'}}>{`Record-${index+1}`}</Typography>
+                <Typography sx={{fontWeight: 'bold'}}>{`Violation - ${index+1}`}</Typography>
             </MuiAccordionSummary>
             <AccordionDetails>
                 <AccordionInfo data={row}/>
