@@ -3,6 +3,8 @@ import './App.css';
 import Table from './Table';
 import SimpleCharts from './DomainGraph';
 import CMPCharts from './CMPGraph';
+import Header from './Header';
+import Sidebar from './Sidebar';
 
 function App() {
   const [domainRecordsMap, setDomainRecordsMap] = useState(null);
@@ -17,7 +19,7 @@ function App() {
         let countData = {};
         let cmpData = {};
 
-        const response = await fetch('http://localhost:5500/api/data/compliance');
+        const response = await fetch('http://172.16.10.110:5500/api/data/compliance');
         const jsonData = await response.json();
 
         jsonData.testdata.body.hits.hits.map((record, index) => {
@@ -80,22 +82,40 @@ function App() {
     return <h3>Loading...</h3>;
   } else {
     return (
-      <div style={{display: 'flex', flexDirection: 'column'}}>
-        <div className="App">
-          <h1>Compliance Analyser</h1>
-          <Table data={{domainRecordsMap, countData}} />
-          {/* <div style={{display: "flex"}}>
-            <SimpleCharts countData={countData}/>
-            <CMPCharts countData={cmpCountData}/>
+
+      <div style={appStyle}>
+         <Header />
+         <div style={contentStyle}>
+          <Sidebar />
+          <div className="App">
+            <h1>Domains</h1>
+            <Table data={{domainRecordsMap, countData}} />
+            {/* <div style={{display: "flex"}}>
+              <SimpleCharts countData={countData}/>
+              <CMPCharts countData={cmpCountData}/>
+            </div>
+            <div style={{display: "flex"}}>
+              <SimpleCharts countData={countData}/>
+              <SimpleCharts countData={countData}/>
+            </div> */}
           </div>
-          <div style={{display: "flex"}}>
-            <SimpleCharts countData={countData}/>
-            <SimpleCharts countData={countData}/>
-          </div> */}
         </div>
+          
       </div>
     );
   }
 }
+
+const appStyle = {
+  height: "100vh", // Set the height of the App component to 100% of the viewport height
+  display: "flex",
+  flexDirection: "column",
+};
+
+
+const contentStyle = {
+  display: "flex",
+  flex: 1, // Allow the Main component to take up the remaining height
+};
 
 export default App;
