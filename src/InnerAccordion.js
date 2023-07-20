@@ -18,16 +18,17 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
-const COMPLIANCE_VIOLATIONS = {
-    1: "UserId Module violations.", //UserId module [module names], called when specific vendor consent was denied. Please check your CMP settings or reach out to your CMP vendor. Vendor consent data sent by CMP - [add vendor consent data here]
-    2: "Auction violations in case of denied vendor consent.", // Bidder [module names], called when specific vendor consent was denied. Please check your CMP settings or reach out to your CMP vendor. Vendor consent data sent by CMP - [add vendor consent data here]
-    3: "User syncup violations.", //User syncup was initiated when purpose 1 consent was denied. Please contact your CSOM for further assistance.
-    4: "User ID syncup violations.", // //UserId syncup initiated when purpose 1 consent was denied. Please contact your CSOM for further assistance.
-    5: "Auction violations in case of denied purpose 2.", // Bidder [module names], called when purpose 2 consent was denied. Please contact your CSOM for further assistance.
-    6: "Incorrect value for gdprApplies flag by CMP.", // CPM return gdprApplies as false for a GDPR enabled region [Display geo detected by us here]. Please check your CMP settings or reach out to your CMP vendor.
-    7: "consent signals (gdpr) not passed to user_sync.html call.", // url parameter gdpr was not passed to user_sync.html. Please contact your CSOM for further assistance.
-    8: "consent signals (gdpr_consent) not passed to user_sync.html call.", //
-    9: "consent signals (us_privacy) not passed to user_sync.html call.", // url parameter us_privacy was not passed to user_sync.html. Please contact your CSOM for further assistance (edited) 
+
+const COMPLIANCE_VIOLATIONS_OBJ = {
+    1: {label: "UserId Module violations.", order: 3},
+    2: {label: "Auction violations in case of denied vendor consent.", order: 6},
+    3: {label: "User syncup violations.", order: 1},
+    4: {label: "User ID syncup violations.", order: 4},
+    5: {label: "Auction violations in case of denied purpose 2.", order: 5},
+    6: {label: "Incorrect value for gdprApplies flag by CMP.", order: 2},
+    7: {label: "consent signals (gdpr) not passed to user_sync.html call.", order: 7},
+    8: {label: "consent signals (gdpr_consent) not passed to user_sync.html call.", order: 8},
+    9: {label: "consent signals (us_privacy) not passed to user_sync.html call.", order: 9},
 }
 
 const COMPLIANCE_VIOLATIONS_SUGGESTIONS = {
@@ -42,14 +43,14 @@ const COMPLIANCE_VIOLATIONS_SUGGESTIONS = {
     9: "consent signals (us_privacy) not passed to user_sync.html call.", // url parameter us_privacy was not passed to user_sync.html. Please contact your CSOM for further assistance (edited) 
 }
 
-const COMPLIANCE_MISCONFIGS = {
-    1: "GDPR timeout", // Configured value - [add value here] is less than the recommended value of 10000. You can update the value from profile edit UI.
-    2: "GDPR Action timeout.", // Value is not set, or is set to 0. You can update the value from profile edit UI.
-    3: "GDPR enablement", //GDPR is not enabled, but a GDPR enabled geo was detected (Display loc detected here). Please enable GDPR config in the profile if you expect traffic from GDPR regions.
-    4: "CCPA enablement", //CCPA is not enabled, but a CCPA enabled geo was detected (Display loc detected here). Please enable CCPA config in the profile if you expect traffic from CCPA enabled regions.
-    5: "Multiple wrappers on page",//Multiple wrappers with same namespaces detected on the page. Ensure all wrappers have unique namespaces to avoid namespace clashes.
-    6: "Prebid version", //Prebid version used is an older one. (Display version here). Upgrading to the latest version will most likely resolve all compliance related issues.
-    7: "Consent management config." //Both GDPR and CCPA are enabled in a single profile. We recommend that you create separate profiles for each GDPR and CCPA applicable regions.
+const COMPLIANCE_MISCONFIGS_OBJ = {
+   1: {label: "GDPR timeout", order: 2},
+   2: {label: "GDPR Action timeout.", order: 7},
+   3: {label: "GDPR enablement", order: 5},
+   4: {label: "CCPA enablement", order: 6},
+   5: {label: "Multiple wrappers on page", order: 4},
+   6: {label: "Prebid version", order: 1},
+   7: {label: "Consent management config.", order: 3}
 }
 
 const COMPLIANCE_MISCONFIGS_SUGGESTIONS = {
@@ -79,6 +80,53 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 }));
 
 const AccordionInfo = ({ data }) => {
+    let violationArr = [], misconfigArr = [];
+    Object.keys(COMPLIANCE_VIOLATIONS_OBJ).map((key, index) => {
+        let present = data.errors.violations.findIndex(item => item.errorCode == key);
+        let meta = present > -1 ? data.errors.violations[present].meta : '';
+
+        violationArr[COMPLIANCE_VIOLATIONS_OBJ[key].order] = (<TableRow
+            key={`mis${index}`}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+        >
+            <TableCell component="th" scope="row">
+                <LightTooltip title={COMPLIANCE_VIOLATIONS_SUGGESTIONS[key].replace("#META", meta)} placement="bottom-start">
+                <div style={{display: 'flex'}}>
+                    {COMPLIANCE_VIOLATIONS_OBJ[key].label}
+                    {
+                        (present > -1) ?
+                        <CheckCircleIcon sx={{ color: green[500], marginLeft: "auto" }}/> :
+                        <HighlightOffIcon sx={{ alignSelf: 'right', color: red[500], marginLeft: "auto" }}/>                         
+                    }
+                </div>
+                </LightTooltip>
+            </TableCell>
+        </TableRow>)
+    })
+
+    Object.keys(COMPLIANCE_MISCONFIGS_OBJ).map((key, index) => {
+        let present = data.errors.misconfigs.findIndex(item => item.errorCode == key);
+        let meta = present > -1 ? data.errors.misconfigs[present].meta : '';
+
+        misconfigArr[COMPLIANCE_MISCONFIGS_OBJ[key].order] = (<TableRow
+            key={`mis${index}`}
+            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+        >
+            <TableCell component="th" scope="row">
+                <LightTooltip title={COMPLIANCE_MISCONFIGS_SUGGESTIONS[key].replace("#META", meta)} placement="bottom-start">
+                    <div style={{display: 'flex'}}>
+                        <span>{COMPLIANCE_MISCONFIGS_OBJ[key].label}</span>
+                    {
+                        (present > -1) ?
+                        <HighlightOffIcon sx={{ alignSelf: 'right', color: red[500], marginLeft: "auto" }}/>:
+                         <CheckCircleIcon sx={{ color: green[500], marginLeft: "auto" }}/>
+                    }
+                    </div>
+                </LightTooltip>
+            </TableCell>
+        </TableRow>)
+    })
+
   return (
     <div>
         <div style={{display: 'flex', flexDirection:'column', marginBottom: '30px'}}>
@@ -149,29 +197,7 @@ const AccordionInfo = ({ data }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {Object.keys(COMPLIANCE_VIOLATIONS).map((key, index) => {
-                            let present = data.errors.violations.findIndex(item => item.errorCode == key);
-                            let meta = present > -1 ? data.errors.violations[present].meta : '';
-
-                            return (<TableRow
-                                key={`mis${index}`}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    <LightTooltip title={COMPLIANCE_VIOLATIONS_SUGGESTIONS[key].replace("#META", meta)} placement="bottom-start">
-                                    <div style={{display: 'flex'}}>
-                                        {COMPLIANCE_VIOLATIONS[key]}
-                                        {
-                                            (present > -1) ?
-                                            <CheckCircleIcon sx={{ color: green[500], marginLeft: "auto" }}/> :
-                                            <HighlightOffIcon sx={{ alignSelf: 'right', color: red[500], marginLeft: "auto" }}/>                         
-                                        }
-                                    </div>
-                                    </LightTooltip>
-                                </TableCell>
-                            </TableRow>)
-                        }
-                        )}
+                        {violationArr}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -185,28 +211,7 @@ const AccordionInfo = ({ data }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {Object.keys(COMPLIANCE_MISCONFIGS).map((key, index) => {
-                            let present = data.errors.misconfigs.findIndex(item => item.errorCode == key);
-                            let meta = present > -1 ? data.errors.misconfigs[present].meta : '';
-                            return (<TableRow
-                                key={`mis${index}`}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    <LightTooltip title={COMPLIANCE_MISCONFIGS_SUGGESTIONS[key].replace("#META", meta)} placement="bottom-start">
-                                        <div style={{display: 'flex'}}>
-                                            <span>{COMPLIANCE_MISCONFIGS[key]}</span>
-                                        {
-                                            (present > -1) ?
-                                            <HighlightOffIcon sx={{ alignSelf: 'right', color: red[500], marginLeft: "auto" }}/>:
-                                             <CheckCircleIcon sx={{ color: green[500], marginLeft: "auto" }}/>
-                                        }
-                                        </div>
-                                    </LightTooltip>
-                                </TableCell>
-                            </TableRow>)
-                        }
-                        )}
+                        {misconfigArr}
                     </TableBody>
                 </Table>
             </TableContainer>
