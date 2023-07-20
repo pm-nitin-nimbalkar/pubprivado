@@ -12,10 +12,10 @@ import Badge from '@mui/material/Badge';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
   '& .MuiBadge-badge': {
-    right: -15,
+    right: -25,
     top: 10,
     border: `2px solid ${theme.palette.background.paper}`,
-    padding: '2px 6px',
+    padding: '7px',
     background: '#F24C3D'
   },
 }));
