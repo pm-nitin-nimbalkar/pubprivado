@@ -77,18 +77,21 @@ function App() {
   }, []); // Empty dependency array to run effect only once on component mount
 
   if (!domainRecordsMap) {
-    return <div>Loading...</div>;
+    return <h3>Loading...</h3>;
   } else {
     return (
-      <div className="App">
-        <Table data={{domainRecordsMap, countData}} />
-        <div style={{display: "flex"}}>
-          <SimpleCharts countData={countData}/>
-          <CMPCharts countData={cmpCountData}/>
-        </div>
-        <div style={{display: "flex"}}>
-          <SimpleCharts countData={countData}/>
-          <SimpleCharts countData={countData}/>
+      <div style={{display: 'flex', flexDirection: 'column'}}>
+        <div className="App">
+          <h1>Compliance Analyser</h1>
+          <Table data={{domainRecordsMap, countData}} />
+          {/* <div style={{display: "flex"}}>
+            <SimpleCharts countData={countData}/>
+            <CMPCharts countData={cmpCountData}/>
+          </div>
+          <div style={{display: "flex"}}>
+            <SimpleCharts countData={countData}/>
+            <SimpleCharts countData={countData}/>
+          </div> */}
         </div>
       </div>
     );
